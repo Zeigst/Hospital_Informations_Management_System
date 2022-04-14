@@ -31,3 +31,4 @@
 2. [ ] Select a patient, show list of all doctors & nurses treating them
 3. [ ] Select a patient, show all medicine they are taking
 4. [ ] Select a medicine, show list of all patients taking it
+5. [ ] Search employee/patient/meds by name
