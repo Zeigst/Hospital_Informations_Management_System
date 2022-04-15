@@ -15,7 +15,7 @@
 
 ## patients_list
 1. [ ] Display list of all patient
-2. [ ] Add patient to patients_list
+2. [x] Add patient to patients_list
 3. [ ] Delete patient_list
 4. [ ] Select a patient, then either update their infos or delete them from the list
 5. [ ] Sort list (by id or by debt)
