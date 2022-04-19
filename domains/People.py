@@ -9,7 +9,7 @@ class Person():
 
     # Get Methods
     def get_id(self):
-        return self.__id()
+        return self.__id
 
     def get_name(self):
         return self.__name
