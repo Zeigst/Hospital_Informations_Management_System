@@ -4,18 +4,12 @@ from PIL import ImageTk, Image
 from domains.People import *
 import DoctorMethods
 
-
 doctors_list = []
 for t in range(10):
     doctors_list.append(Doctor("D-000", "Cao Hoang Minh", "M", "19/09/2002"))
     doctors_list.append(Doctor("D-001", "Cao Hoang Linh", "M", "12/10/2005"))
     doctors_list.append(Doctor("D-002", "Nguyen Le Minh Hang", "F", "05/09/2002"))
     doctors_list.append(Doctor("D-003", "Do Nguyen Minh Thu", "F", "01/01/2003"))
-
-
-
-
-
 
 
 #Create main window
@@ -30,49 +24,6 @@ window.iconphoto(False, icon)
 fulwidth= window.winfo_screenwidth()
 fulheight= window.winfo_screenheight()
 window.geometry("%dx%d" % (fulwidth, fulheight))
-'''
-def doc_press():
-    subwin = Toplevel(window)
-    subwin.geometry("%dx%d" % (fulwidth, fulheight))
-    icon = PhotoImage(file = "images/HIMS Icon.png")
-    subwin.iconphoto(False, icon)
-    subwin.title("Doctors Information Management")
-    
-    # Create TreeView List
-    doc_tree = ttk.Treeview(subwin)
-
-    # Define columns
-    doc_tree['columns'] = ("ID", "Name", "Gender", "Date of Birth")
-
-    # Format columns
-    doc_tree.column("")
-'''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #==========================================================================================
 # Decorate Main Menu

@@ -5,7 +5,6 @@ from tk import *
 from PIL import ImageTk, Image
 
 
-
 def doc_press(window, fulwidth, fulheight, doctors_list):
     subwin = Toplevel(window)
     subwin.geometry("%dx%d" % (fulwidth, fulheight))
@@ -13,7 +12,6 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
     subwin.iconphoto(False, icon)
     subwin.title("Doctors Information Management")
     Frame(subwin, bg='deep sky blue').place(x=0, y=0 ,width=fulwidth/2, height=fulheight)
-
 
     style = ttk.Style()
     style.theme_use('clam')
@@ -28,12 +26,8 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
     
     style.map('Treeview', background=[('selected', 'dark blue')])
 
-
     # Create TreeView List
     doc_tree = ttk.Treeview(subwin, selectmode='browse')
-    #scroll_bar = ttk.Scrollbar(subwin, orient="vertical", command=doc_tree.yview)
-    #scroll_bar.place(x=fulwidth/4*3+175, y=100, height=fulheight/2)
-    #doc_tree.configure(yscrollcommand=scroll_bar.set)
 
     # Define columns
     doc_tree['columns'] = ("ID", "Name", "Gender", "Date of Birth")
@@ -61,6 +55,21 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
         
     doc_tree.place(x=fulwidth/2+50, y=50, height=fulheight-150, width=fulwidth/2-100)
 
+    # Label
+    Label(subwin,anchor='w', bg='deep sky blue', fg='white', text='ID: ', font=("Ariel", 14, 'bold')).place(x=50, y=50,width=75)
+    Label(subwin,anchor='w', bg='deep sky blue', fg='white', text='Name: ', font=("Ariel", 14, 'bold')).place(x=50, y=75,width=75)
+    Label(subwin,anchor='w', bg='deep sky blue', fg='white', text='Gender: ', font=("Ariel", 14, 'bold')).place(x=50, y=100,width=75)
+    Label(subwin,anchor='w', bg='deep sky blue', fg='white', text='DoB: ', font=("Ariel", 14, 'bold')).place(x=50, y=125, width=75)
 
+    # Entry
+    input_id = Entry(subwin)
+    input_id.place(x=150, y=50)
 
+    input_name = Entry(subwin)
+    input_name.place(x=150, y=75)
 
+    input_gend = Entry(subwin)
+    input_gend.place(x=150, y=100)
+
+    input_dob = Entry(subwin)
+    input_dob.place(x=150, y=125)
