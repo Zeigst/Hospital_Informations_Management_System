@@ -5,6 +5,8 @@ from tk import *
 from PIL import ImageTk, Image
 import utils
 
+doctors_update_list = []
+
 def clear_entry(input_entry, input_id, input_name, input_gend, input_dob):
     # Delete all Warnings
     Label(input_entry,anchor='w', bg='deep sky blue', fg='crimson', text='                               ', font=("Ariel", 14, 'bold')).grid(column=3,row=0, sticky='w')
@@ -18,7 +20,7 @@ def clear_entry(input_entry, input_id, input_name, input_gend, input_dob):
     input_gend.delete(0, END)
     input_dob.delete(0, END)
     
-def doc_add(doctors_list, doc_tree, doc_count, input_entry, input_id, input_name, input_gend, input_dob):
+def doc_add(doctors_list, doc_tree, input_entry, input_id, input_name, input_gend, input_dob):
     # Delete all Warnings
     Label(input_entry,anchor='w', bg='deep sky blue', fg='crimson', text='                                          ', font=("Ariel", 14, 'bold')).grid(column=3,row=0, sticky='w')
     Label(input_entry,anchor='w', bg='deep sky blue', fg='crimson', text='                       ', font=("Ariel", 14, 'bold')).grid(column=3,row=1, sticky='w')
@@ -71,7 +73,11 @@ def doc_add(doctors_list, doc_tree, doc_count, input_entry, input_id, input_name
     if valid_check == 0:
         # Add to doctors_list
         doctors_list.append(Doctor(id, name, gend, dob))
+        global doctors_update_list
+        doctors_update_list = doctors_list
+
         # Display on Treeview
+        global doc_count
         doc_tree.insert(parent='', index = 'end', iid=doc_count, text='', values=(id, name, gend, dob))
         doc_count += 1
 
@@ -132,6 +138,7 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
 
     doc_tree.bind('<Motion>', 'break')
     # Insert Data
+    global doc_count
     doc_count = 0
     for doctor in doctors_list:
         doc_tree.insert(parent='', index = 'end', iid=doc_count, text='', values=(doctor.get_id(), doctor.get_name(), doctor.get_gend(), doctor.get_dob()))
@@ -166,7 +173,7 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
 
     # Buttons
     add_doctor = Button(subwin, text='ADD DOCTOR',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',
-        activebackground='dark blue', activeforeground='white', command=lambda: doc_add(doctors_list, doc_tree, doc_count, input_entry, input_id, input_name, input_gend, input_dob))
+        activebackground='dark blue', activeforeground='white', command=lambda: doc_add(doctors_list, doc_tree, input_entry, input_id, input_name, input_gend, input_dob))
     add_doctor.place(x=50, y=200, width=150, height=50)
 
     clear = Button(subwin, text='CLEAR',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',

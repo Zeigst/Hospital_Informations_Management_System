@@ -5,10 +5,6 @@ from domains.People import *
 import DoctorMethods
 
 doctors_list = []
-doctors_list.append(Doctor("D-000", "Cao Hoang Minh", "M", "19/09/2002"))
-doctors_list.append(Doctor("D-001", "Cao Hoang Linh", "M", "12/10/2005"))
-doctors_list.append(Doctor("D-002", "Nguyen Le Minh Hang", "F", "05/09/2002"))
-doctors_list.append(Doctor("D-003", "Do Nguyen Minh Thu", "F", "01/01/2003"))
 
 
 #Create main window
