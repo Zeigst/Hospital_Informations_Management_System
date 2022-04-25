@@ -3,7 +3,20 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 from domains.People import *
 import DoctorMethods
+import database
 
+# doctors_list = []
+
+def on_ready():
+    global doctors_list
+    doctors_list = database.load_data()
+
+def on_close():
+    global doctors_list
+    database.save_doctor(doctors_list)
+    window.destroy()
+
+global doctors_list
 doctors_list = []
 
 
@@ -61,6 +74,8 @@ Button(window, text="EXIT", anchor='center', font=("Ariel", 20,'bold'), bg="deep
 
 
 def main():
+    on_ready()
+    window.protocol("WM_DELETE_WINDOW", on_close)
     window.mainloop()
 
 if __name__ == "__main__":
