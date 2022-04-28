@@ -1,3 +1,6 @@
+import datetime
+
+
 def invalid_id(id, para: str):
     """
     Return 1 if invalid | 0 if valid\n
@@ -54,3 +57,17 @@ def invalid_salary(salary):
             return 0
         except ValueError:
             return 1
+
+
+def sort_by_column(treeview, col, reverse):
+    data = [(treeview.set(k, col), k) for k in treeview.get_children('')]
+    if(col != 'Date of Birth'):
+        data.sort(reverse=reverse)
+    else:
+        data.sort(key=lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'),reverse=reverse)
+    
+    for index, (val, k) in enumerate(data):
+        treeview.move(k, '', index)
+
+    treeview.heading(col, text=col, command=lambda _col=col: \
+                 sort_by_column(treeview, _col, not reverse))

@@ -307,7 +307,7 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
     style.map('Treeview', background=[('selected', 'dark blue')])
 
     # Create TreeView List
-    doc_tree = ttk.Treeview(subwin, selectmode='browse')
+    doc_tree = ttk.Treeview(subwin, selectmode='browse', show='headings')
 
     # Define columns
     doc_tree['columns'] = ("ID", "Name", "Gender", "Date of Birth")
@@ -321,10 +321,10 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
 
     # Create Headings
     doc_tree.heading("#0", text="")
-    doc_tree.heading("ID", text="ID", anchor='center')
-    doc_tree.heading("Name", text="Name", anchor='center')
-    doc_tree.heading("Gender", text="Gender", anchor='center')
-    doc_tree.heading("Date of Birth", text="Date of Birth", anchor='center')
+    doc_tree.heading("ID", text="ID", anchor='center', command= lambda: utils.sort_by_column(doc_tree, "ID", False))
+    doc_tree.heading("Name", text="Name", anchor='center', command= lambda: utils.sort_by_column(doc_tree, "Name", False))
+    doc_tree.heading("Gender", text="Gender", anchor='center', command= lambda: utils.sort_by_column(doc_tree, "Gender", False))
+    doc_tree.heading("Date of Birth", text="Date of Birth", anchor='center', command= lambda: utils.sort_by_column(doc_tree, "Date of Birth", False))
 
     doc_tree.bind('<Motion>', 'break')
     # Insert Data
