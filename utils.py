@@ -31,6 +31,26 @@ def invalid_dob(dob):
                 return 1
             elif check1!="/" or check2!="/":
                 return 1
+            elif dd_check<1 or dd_check>31:
+                return 1
+            elif mm_check<1 or mm_check>12:
+                return 1
             else: return 0
+        except ValueError:
+            return 1
+
+def invalid_phone(phone):
+    while True:
+        try:
+            phone_check = int(phone)
+            return 0
+        except ValueError:
+            return 1
+
+def invalid_salary(salary):
+    while True:
+        try:
+            salary_check = int(salary)
+            return 0
         except ValueError:
             return 1
