@@ -321,10 +321,10 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
 
     # Create Headings
     doc_tree.heading("#0", text="")
-    doc_tree.heading("ID", text="ID", anchor='center', command= lambda: utils.sort_by_column(doc_tree, "ID", False))
-    doc_tree.heading("Name", text="Name", anchor='center', command= lambda: utils.sort_by_column(doc_tree, "Name", False))
-    doc_tree.heading("Gender", text="Gender", anchor='center', command= lambda: utils.sort_by_column(doc_tree, "Gender", False))
-    doc_tree.heading("Date of Birth", text="Date of Birth", anchor='center', command= lambda: utils.sort_by_column(doc_tree, "Date of Birth", False))
+    doc_tree.heading("ID", text="ID", anchor='center', command= lambda: utils.sort_doctor_by_column(doc_tree, doctors_list, "ID", False))
+    doc_tree.heading("Name", text="Name", anchor='center', command= lambda: utils.sort_doctor_by_column(doc_tree, doctors_list, "Name", False))
+    doc_tree.heading("Gender", text="Gender", anchor='center', command= lambda: utils.sort_doctor_by_column(doc_tree, doctors_list, "Gender", False))
+    doc_tree.heading("Date of Birth", text="Date of Birth", anchor='center', command= lambda: utils.sort_doctor_by_column(doc_tree, doctors_list, "Date of Birth", False))
 
     doc_tree.bind('<Motion>', 'break')
     # Insert Data

@@ -59,15 +59,23 @@ def invalid_salary(salary):
             return 1
 
 
-def sort_by_column(treeview, col, reverse):
-    data = [(treeview.set(k, col), k) for k in treeview.get_children('')]
-    if(col != 'Date of Birth'):
-        data.sort(reverse=reverse)
-    else:
-        data.sort(key=lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'),reverse=reverse)
-    
-    for index, (val, k) in enumerate(data):
-        treeview.move(k, '', index)
+def sort_doctor_by_column(treeview, arr, col, reverse):
+    if(col == "ID"):
+        arr.sort(key=lambda x: x.get_id(),reverse=reverse)
+    if(col == "Name"):
+        arr.sort(key=lambda x: x.get_name(),reverse=reverse)
+    if(col == "Gender"):
+        arr.sort(key=lambda x: x.get_gend(),reverse=reverse)
+    if(col == "Date of Birth"):
+        arr.sort(key=lambda x: datetime.datetime.strptime(x.get_dob(), '%d/%m/%Y'),reverse=reverse)
+    for i in treeview.get_children():
+        treeview.delete(i)
+    a_count = 0
+    for element in arr:
+        treeview.insert(parent='', index = 'end', iid=a_count, text='', values=(
+            element.get_id(), element.get_name(), element.get_gend(), element.get_dob())
+        )
+        a_count += 1
 
     treeview.heading(col, text=col, command=lambda _col=col: \
-                 sort_by_column(treeview, _col, not reverse))
+                 sort_doctor_by_column(treeview, arr, _col, not reverse))
