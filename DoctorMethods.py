@@ -1,4 +1,5 @@
 from domains.People import *
+from domains.Relations import *
 from tkinter import *
 from tkinter import ttk
 from tk import *
@@ -26,7 +27,7 @@ def clear_entry(entry_frame, id_entry, name_entry, gend_entry, dob_entry, phone_
     dept_entry.delete(0, END)
     salary_entry.delete(0, END)
 
-    # Set Selected to -1
+    # Set selected_doctor to -1
     global selected_doctor
     selected_doctor = -1
     
@@ -281,10 +282,86 @@ def doc_update(doctors_list, doc_tree, entry_frame, id_entry, name_entry, gend_e
             dept_entry.delete(0, END)
             salary_entry.delete(0, END)
 
-def doc_press(window, fulwidth, fulheight, doctors_list):
+def remove_assigned_patient(patient_tree, doctor_id, pa_doc_list):
+    if selected_doctor != -1:    
+        if len(patient_tree.selection())>0:
+            selected_patient = patient_tree.selection()[0]
+            patient_id = patient_tree.item(selected_patient, 'values')[0]
+            for relation in pa_doc_list:
+                if relation.get_PatientID() == patient_id and relation.get_DoctorID() == doctor_id:
+                    pa_doc_list.remove(relation)
+                    break
+            patient_tree.delete(selected_patient)
+
+def show_patients_of_doc(subwin, doc_tree, pa_doc_list, patients_list):
+    if selected_doctor != -1:
+        temp_win = Toplevel(subwin)
+        icon = PhotoImage(file = "images/HIMS Icon.png")
+        temp_win.iconphoto(False, icon)
+        temp_win.title("Assigned Patients")
+
+        # Create list af assigned patients
+        doc_id = doc_tree.item(selected_doctor, 'values')[0]
+        temp_list = []
+        assigned_patients_list = []
+        for relation in pa_doc_list:
+            if relation.get_DoctorID() == doc_id:
+                temp_list.append(relation)
+        for relation in temp_list:
+            for patient in patients_list:   
+                if relation.get_PatientID() == patient.get_id():
+                    assigned_patients_list.append(patient)
+                    break
+        
+        # Create Treeview
+        patient_tree = ttk.Treeview(temp_win, selectmode='browse')
+        # Define columns
+        patient_tree['columns'] = ("ID", "Name", "Gend", "DoB")
+        # Format columns
+        patient_tree.column("#0", width=0, stretch=NO)
+        patient_tree.column("ID", anchor='center', width=75)
+        patient_tree.column("Name",anchor='w', width=125)
+        patient_tree.column("Gend",anchor='center', width=75)
+        patient_tree.column("DoB",anchor='center', width=100)
+        # Create headings
+        patient_tree.heading("#0", text="")
+        patient_tree.heading("ID", text="ID", anchor='center')
+        patient_tree.heading("Name", text="Name", anchor='center')
+        patient_tree.heading("Gend", text="Gend", anchor='center')
+        patient_tree.heading("DoB", text="DoB", anchor='center')
+
+        patient_tree.bind('<Motion>', 'break')
+
+        # Insert Data
+        count = 0
+        for patient in assigned_patients_list:
+            patient_tree.insert(parent='', index = 'end', iid=count, text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
+            count += 1
+
+        patient_tree.pack()
+
+        # Button to remove assigned patient
+        remove_assigned_patient_button = Button(temp_win, text='REMOVE PATIENT', anchor='center',font=("Ariel", 12,'bold'),bg='crimson', fg='white', relief='ridge',
+            activebackground='red',activeforeground='white', command=lambda: remove_assigned_patient(patient_tree, doc_id, pa_doc_list))
+        remove_assigned_patient_button.pack(pady = 10)
+
+        
+
+def doc_press(window, fulwidth, fulheight, doctors_list, patients_list, pa_doc_list):
     global selected_doctor
     selected_doctor = -1
-    
+
+    #patients_list.append(Patient('P-001', 'Patient 1', 'M', '01/01/2001'))
+    #patients_list.append(Patient('P-002', 'Patient 2', 'M', '01/01/2001'))
+    #patients_list.append(Patient('P-003', 'Patient 3', 'M', '01/01/2001'))
+    #patients_list.append(Patient('P-004', 'Patient 4', 'M', '01/01/2001'))
+
+    #pa_doc_list.append(Pa_Doc('P-001', 'D-001'))
+    #pa_doc_list.append(Pa_Doc('P-002', 'D-001'))
+    #pa_doc_list.append(Pa_Doc('P-003', 'D-001'))
+    #pa_doc_list.append(Pa_Doc('P-001', 'D-002'))
+    #pa_doc_list.append(Pa_Doc('P-004', 'D-003'))
+
     subwin = Toplevel(window)
     subwin.geometry("%dx%d" % (fulwidth, fulheight))
     icon = PhotoImage(file = "images/HIMS Icon.png")
@@ -321,10 +398,10 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
 
     # Create Headings
     doc_tree.heading("#0", text="")
-    doc_tree.heading("ID", text="ID", anchor='center', command= lambda: utils.sort_doctor_by_column(doc_tree, doctors_list, "ID", False))
-    doc_tree.heading("Name", text="Name", anchor='center', command= lambda: utils.sort_doctor_by_column(doc_tree, doctors_list, "Name", False))
-    doc_tree.heading("Gender", text="Gender", anchor='center', command= lambda: utils.sort_doctor_by_column(doc_tree, doctors_list, "Gender", False))
-    doc_tree.heading("Date of Birth", text="Date of Birth", anchor='center', command= lambda: utils.sort_doctor_by_column(doc_tree, doctors_list, "Date of Birth", False))
+    doc_tree.heading("ID", text="ID", anchor='center', command= lambda: utils.sort_people_list_by_column(doc_tree, doctors_list, "ID", False))
+    doc_tree.heading("Name", text="Name", anchor='center', command= lambda: utils.sort_people_list_by_column(doc_tree, doctors_list, "Name", False))
+    doc_tree.heading("Gender", text="Gender", anchor='center', command= lambda: utils.sort_people_list_by_column(doc_tree, doctors_list, "Gender", False))
+    doc_tree.heading("Date of Birth", text="Date of Birth", anchor='center', command= lambda: utils.sort_people_list_by_column(doc_tree, doctors_list, "Date of Birth", False))
 
     doc_tree.bind('<Motion>', 'break')
     # Insert Data
@@ -424,31 +501,35 @@ def doc_press(window, fulwidth, fulheight, doctors_list):
     Label(entry_frame, bg='deep sky blue', fg='white', text=' | ', font=("Ariel", 14, 'bold')).grid(column=5, row=7)
 
     # Buttons
-    add_doctor = Button(subwin, text='ADD DOCTOR',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',
+    add_doctor_button = Button(subwin, text='ADD DOCTOR',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',
         activebackground='dark blue', activeforeground='white', command=lambda: doc_add(doctors_list, doc_tree, entry_frame, id_entry, name_entry, gend_entry, dob_entry,phone_entry,email_entry,dept_entry,salary_entry))
-    add_doctor.place(x=50, y=fulheight-75-85-10-50, width=150, height=50)
+    add_doctor_button.place(x=50, y=fulheight-75-85-10-50, width=150, height=50)
 
-    update_doctor = Button(subwin, text='UPDATE',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',
+    update_doctor_button = Button(subwin, text='UPDATE',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',
         activebackground='dark blue', activeforeground='white', command=lambda: doc_update(doctors_list, doc_tree, entry_frame, id_entry, name_entry, gend_entry, dob_entry,phone_entry,email_entry,dept_entry,salary_entry))
-    update_doctor.place(x=fulwidth/2-50-150, y=fulheight-75-85-10-50, width=150, height=50)
+    update_doctor_button.place(x=fulwidth/2-50-150, y=fulheight-75-85-10-50, width=150, height=50)
 
-    clear = Button(subwin, text='CLEAR',anchor='center',font=("Ariel", 12,'bold'), fg='red', relief='ridge',
+    clear_button = Button(subwin, text='CLEAR',anchor='center',font=("Ariel", 12,'bold'), fg='red', relief='ridge',
         activebackground='dark blue', activeforeground='white', command=lambda: clear_entry(entry_frame, id_entry, name_entry, gend_entry, dob_entry,phone_entry,email_entry,dept_entry,salary_entry))
-    clear.place(x=50,y=fulheight-75-85, width=fulwidth/2-100, height=50)
+    clear_button.place(x=fulwidth/4*1-100, y=fulheight-75-85-10-50, width=200, height=50)
 
-    remove_doctor = Button(subwin, text='REMOVE SELECTED',anchor='center',font=("Ariel", 12,'bold'),bg='red', fg='white', relief='ridge',
+    remove_doctor_button = Button(subwin, text='REMOVE SELECTED',anchor='center',font=("Ariel", 12,'bold'),bg='red', fg='white', relief='ridge',
         activebackground='crimson', activeforeground='white', command=lambda: doc_remove(doctors_list, doc_tree))
-    remove_doctor.place(x=fulwidth/4*3-100, y=fulheight-75-85, width=200, height=50)
+    remove_doctor_button.place(x=fulwidth/4*3-100, y=fulheight-75-85, width=200, height=50)
 
-    remove_all_doctor = Button(subwin, text='REMOVE ALL',anchor='center',font=("Ariel", 12,'bold'),bg='red', fg='white', relief='ridge',
+    remove_all_doctor_button = Button(subwin, text='REMOVE ALL',anchor='center',font=("Ariel", 12,'bold'),bg='red', fg='white', relief='ridge',
         activebackground='crimson', activeforeground='white', command=lambda: all_doc_remove(doc_tree, doctors_list))
-    remove_all_doctor.place(x=fulwidth-50-150, y=fulheight-75-85, width=150, height=50)
+    remove_all_doctor_button.place(x=fulwidth-50-150, y=fulheight-75-85, width=150, height=50)
 
-    select_doctor = Button(subwin, text='SELECT',anchor='center',font=("Ariel", 12,'bold'), bg='deep sky blue',fg='white', relief='ridge',
+    select_doctor_button = Button(subwin, text='SELECT',anchor='center',font=("Ariel", 12,'bold'), bg='deep sky blue',fg='white', relief='ridge',
         activebackground='dark blue', activeforeground='white', command=lambda: doc_select(doctors_list, doc_tree, entry_frame, id_entry, name_entry, gend_entry, dob_entry,phone_entry,email_entry,dept_entry,salary_entry))
-    select_doctor.place(x=fulwidth/2+50, y=fulheight-75-85, width=150, height=50)
+    select_doctor_button.place(x=fulwidth/2+50, y=fulheight-75-85, width=150, height=50)
 
-    show_patients = Button(subwin, text='SHOW PATIENTS',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',
+    show_patients_button = Button(subwin, text='SHOW PATIENTS',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',
+        activebackground='dark blue', activeforeground='white', command=lambda: show_patients_of_doc(subwin, doc_tree, pa_doc_list, patients_list))
+    show_patients_button.place(x=50,y=fulheight-75-85, width=fulwidth/4-60, height=50)
+
+    assign_patients_button = Button(subwin, text='ASSIGN PATIENTS',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',
         activebackground='dark blue', activeforeground='white')
-    show_patients.place(x=fulwidth/4*1-100, y=fulheight-75-85-10-50, width=200, height=50)
+    assign_patients_button.place(x=fulwidth/4+10,y=fulheight-75-85, width=fulwidth/4-60, height=50)
 

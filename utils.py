@@ -59,7 +59,7 @@ def invalid_salary(salary):
             return 1
 
 
-def sort_doctor_by_column(treeview, arr, col, reverse):
+def sort_people_list_by_column(treeview, arr, col, reverse):
     if(col == "ID"):
         arr.sort(key=lambda x: x.get_id(),reverse=reverse)
     if(col == "Name"):
@@ -78,4 +78,4 @@ def sort_doctor_by_column(treeview, arr, col, reverse):
         a_count += 1
 
     treeview.heading(col, text=col, command=lambda _col=col: \
-                 sort_doctor_by_column(treeview, arr, _col, not reverse))
+                 sort_people_list_by_column(treeview, arr, _col, not reverse))

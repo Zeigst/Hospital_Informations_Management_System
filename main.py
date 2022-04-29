@@ -9,15 +9,43 @@ import database
 
 def on_ready():
     global doctors_list
-    doctors_list = database.load_data()
+    doctors_list = database.load_doctors()
+    global workers_list
+    workers_list = database.load_workers()
+    global patients_list
+    patients_list = database.load_patients()
+    global medicines_list
+    medicines_list = database.load_medicines()
+    global pa_doc_list
+    pa_doc_list = database.load_pa_doc()
+    global pa_med_list
+    pa_med_list = database.load_pa_med()
 
 def on_close():
     global doctors_list
-    database.save_doctor(doctors_list)
+    database.save_doctors(doctors_list)
+    global workers_list
+    database.save_workers(workers_list)
+    global patients_list
+    database.save_patients(patients_list)
+    global medicines_list
+    database.save_medicines(medicines_list)
+    global pa_doc_list
+    database.save_pa_doc(pa_doc_list)
+    global pa_med_list
+    database.save_pa_med(pa_med_list)
     window.destroy()
 
 global doctors_list
 doctors_list = []
+global workers_list
+workers_list = []
+global patients_list
+patients_list = []
+global pa_doc_list
+pa_doc_list = []
+global pa_med_list
+pa_med_list = []
 
 
 #Create main window
@@ -57,8 +85,9 @@ Label(window, image=HospitalImg, bg="deep sky blue", anchor='center').place(x = 
 
 
 # Buttons
-Button(window, text="DOCTORS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
-            activebackground='dark blue', activeforeground='white', command=lambda: DoctorMethods.doc_press(window, fulwidth, fulheight, doctors_list)).place(x=100, y=fulheight/2-100, width=fulwidth/2-200, height = 50)
+doctors_button = Button(window, text="DOCTORS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
+            activebackground='dark blue', activeforeground='white', command=lambda: DoctorMethods.doc_press(window, fulwidth, fulheight, doctors_list, patients_list, pa_doc_list))
+doctors_button.place(x=100, y=fulheight/2-100, width=fulwidth/2-200, height = 50)
 
 Button(window, text="WORKERS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
             activebackground='dark blue', activeforeground='white').place(x=100, y=fulheight/2-40, width=fulwidth/2-200, height = 50)
