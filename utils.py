@@ -58,6 +58,13 @@ def invalid_salary(salary):
         except ValueError:
             return 1
 
+def invalid_debt(debt):
+    while True:
+        try:
+            debt_check = int(debt)
+            return 0
+        except ValueError:
+            return 1
 
 def sort_people_list_by_column(treeview, arr, col, reverse):
     if(col == "ID"):
