@@ -2,11 +2,9 @@ from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
 from domains.People import *
-import DoctorMethods
-import PatientMethods
+import methods.DoctorMethods as DoctorMethods
+import methods.PatientMethods as PatientMethods
 import database
-
-# doctors_list = []
 
 def on_ready():
     database.unzip_data()
@@ -51,6 +49,7 @@ global pa_doc_list
 pa_doc_list = []
 global pa_med_list
 pa_med_list = []
+
 
 
 #Create main window
