@@ -9,6 +9,7 @@ import database
 # doctors_list = []
 
 def on_ready():
+    database.unzip_data()
     global doctors_list
     doctors_list = database.load_doctors()
     global workers_list
@@ -35,6 +36,7 @@ def on_close():
     database.save_pa_doc(pa_doc_list)
     global pa_med_list
     database.save_pa_med(pa_med_list)
+    database.zip_data()
     window.destroy()
 
 global doctors_list

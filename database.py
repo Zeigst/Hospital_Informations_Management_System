@@ -1,5 +1,6 @@
 import pickle 
 import os
+import zipfile
 
 def save_doctors(doctors_list):
     with open("doctors.pkl", "wb") as f:
@@ -24,6 +25,21 @@ def save_pa_doc(pa_doc_list):
 def save_pa_med(pa_med_list):
     with open("pa_med.pkl", "wb") as f:
         pickle.dump(pa_med_list, f, pickle.HIGHEST_PROTOCOL)
+
+def zip_data():
+    with zipfile.ZipFile('hospital.dat', 'w', compression=zipfile.ZIP_DEFLATED) as zip:        
+        zip.write('doctors.pkl')
+        zip.write('workers.pkl')
+        zip.write('patients.pkl')
+        zip.write('medicines.pkl')
+        zip.write('pa_doc.pkl')
+        zip.write('pa_med.pkl')
+    os.remove('doctors.pkl')
+    os.remove('workers.pkl')
+    os.remove('patients.pkl')
+    os.remove('medicines.pkl')
+    os.remove('pa_doc.pkl')
+    os.remove('pa_med.pkl')
 
 #===========================================================================
 
@@ -74,3 +90,9 @@ def load_pa_med():
             pa_med_list = pickle.load(f)
 
     return (pa_med_list)
+
+def unzip_data():
+    if os.path.exists('hospital.dat'):
+        with zipfile.ZipFile('hospital.dat', 'r') as zip:
+            zip.extractall()
+        os.remove("hospital.dat")
