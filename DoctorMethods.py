@@ -185,7 +185,7 @@ def doc_select(doctors_list, doc_tree, entry_frame, id_entry, name_entry, gend_e
                 salary_entry.insert(0, doctor.get_salary())
                 break
 
-def doc_update(doctors_list, doc_tree, entry_frame, id_entry, name_entry, gend_entry, dob_entry, phone_entry, email_entry, dept_entry, salary_entry):
+def doc_update(doctors_list, pa_doc_list, doc_tree, entry_frame, id_entry, name_entry, gend_entry, dob_entry, phone_entry, email_entry, dept_entry, salary_entry):
     global selected_doctor
     if selected_doctor != -1:
         Label(entry_frame, bg='deep sky blue', fg='crimson', text='                                  ', font=("Ariel", 14, 'bold')).grid(column=6,row=0,sticky='w')
@@ -274,6 +274,12 @@ def doc_update(doctors_list, doc_tree, entry_frame, id_entry, name_entry, gend_e
                     if len(salary) > 0:
                         doctor.set_salary(salary)
                     break
+            
+            for relation in pa_doc_list:
+                if relation.get_DoctorID() == doc_tree.item(selected_doctor, 'values')[0]:
+                    relation.set_DoctorID(id)
+                    
+            
             doc_tree.item(selected_doctor, text="", values = (id, name, gend, dob))
             selected_doctor = -1
         
@@ -512,11 +518,11 @@ def doc_press(window, fulwidth, fulheight, doctors_list, patients_list, pa_doc_l
     entry_frame = Frame(doc_subwin, bg='deep sky blue')
     entry_frame.place(x=50, y=100, width=fulwidth/2-100, height=fulheight/2)
     Frame(doc_subwin, bg='crimson').place(x=50, y=350, width=fulwidth/2-100, height=2)
-    Label(doc_subwin, text=' Entries marked with " * " must not be empty ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=360, height=30)
-    Label(doc_subwin, text=' ID must be " D-xxx " ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=380, height=30)
-    Label(doc_subwin, text=' Gender must be " M " or " F " ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=400, height=30)
-    Label(doc_subwin, text=' Date of Birth must be " dd/mm/yyyy " ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=420, height=30)
-    Label(doc_subwin, text=' Phone & Salary mustbe numbers ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=440, height=30)
+    Label(doc_subwin, text='  - Entries marked with " * " must not be empty ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=360, height=30)
+    Label(doc_subwin, text='  - ID must be " D-xxx " ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=385, height=30)
+    Label(doc_subwin, text='  - Gender must be " M " or " F " ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=410, height=30)
+    Label(doc_subwin, text='  - Date of Birth must be " dd/mm/yyyy " ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=435, height=30)
+    Label(doc_subwin, text='  - Phone & Salary must be numbers ', anchor='w', bg='deep sky blue', fg='white', font=("Ariel", 12, 'bold')).place(x=50, y=460, height=30)
 
 
     # Column 0: ( * )
@@ -596,7 +602,7 @@ def doc_press(window, fulwidth, fulheight, doctors_list, patients_list, pa_doc_l
     add_doctor_button.place(x=50, y=fulheight-75-85-10-50, width=150, height=50)
 
     update_doctor_button = Button(doc_subwin, text='UPDATE',anchor='center',font=("Ariel", 12,'bold'), fg='deep sky blue', relief='ridge',
-        activebackground='dark blue', activeforeground='white', command=lambda: doc_update(doctors_list, doc_tree, entry_frame, id_entry, name_entry, gend_entry, dob_entry,phone_entry,email_entry,dept_entry,salary_entry))
+        activebackground='dark blue', activeforeground='white', command=lambda: doc_update(doctors_list, pa_doc_list, doc_tree, entry_frame, id_entry, name_entry, gend_entry, dob_entry, phone_entry, email_entry, dept_entry, salary_entry))
     update_doctor_button.place(x=fulwidth/2-50-150, y=fulheight-75-85-10-50, width=150, height=50)
 
     clear_button = Button(doc_subwin, text='CLEAR',anchor='center',font=("Ariel", 12,'bold'), fg='red', relief='ridge',

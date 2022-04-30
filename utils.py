@@ -53,7 +53,7 @@ def invalid_phone(phone):
 def invalid_salary(salary):
     while True:
         try:
-            salary_check = int(salary)
+            salary_check = float(salary)
             return 0
         except ValueError:
             return 1
@@ -61,7 +61,7 @@ def invalid_salary(salary):
 def invalid_debt(debt):
     while True:
         try:
-            debt_check = int(debt)
+            debt_check = float(debt)
             return 0
         except ValueError:
             return 1
@@ -86,3 +86,25 @@ def sort_people_list_by_column(treeview, arr, col, reverse):
 
     treeview.heading(col, text=col, command=lambda _col=col: \
                  sort_people_list_by_column(treeview, arr, _col, not reverse))
+
+
+def sort_medicines_list_by_column(treeview, arr,col, reverse):
+    if(col == "ID"):
+        arr.sort(key=lambda x: x.get_id(),reverse=reverse)
+    if(col == "Name"):
+        arr.sort(key=lambda x: x.get_name(),reverse=reverse)
+    if(col == "Price"):
+        arr.sort(key=lambda x: x.get_price(),reverse=reverse)
+    if(col == "Stock"):
+        arr.sort(key=lambda x: x.get_stock(),reverse=reverse)
+    for i in treeview.get_children():
+        treeview.delete(i)
+    a_count = 0
+    for element in arr:
+        treeview.insert(parent='', index = 'end', iid=a_count, text='', values=(
+            element.get_id(), element.get_name(), element.get_price(), element.get_stock())
+        )
+        a_count += 1
+
+    treeview.heading(col, text=col, command=lambda _col=col: \
+                 sort_medicines_list_by_column(treeview, arr, _col, not reverse))

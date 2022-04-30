@@ -3,6 +3,7 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 from domains.People import *
 import DoctorMethods
+import PatientMethods
 import database
 
 # doctors_list = []
@@ -42,6 +43,8 @@ global workers_list
 workers_list = []
 global patients_list
 patients_list = []
+global medicines_list
+medicines_list = []
 global pa_doc_list
 pa_doc_list = []
 global pa_med_list
@@ -92,8 +95,9 @@ doctors_button.place(x=100, y=fulheight/2-100, width=fulwidth/2-200, height = 50
 Button(window, text="WORKERS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
             activebackground='dark blue', activeforeground='white').place(x=100, y=fulheight/2-40, width=fulwidth/2-200, height = 50)
 
-Button(window, text="PATIENTS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
-            activebackground='dark blue', activeforeground='white').place(x=100, y=fulheight/2+20, width=fulwidth/2-200, height = 50)
+patients_button = Button(window, text="PATIENTS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
+            activebackground='dark blue', activeforeground='white', command=lambda: PatientMethods.pat_press(window, fulwidth, fulheight, doctors_list, patients_list, medicines_list, pa_doc_list, pa_med_list))
+patients_button.place(x=100, y=fulheight/2+20, width=fulwidth/2-200, height = 50)
 
 Button(window, text="MEDICINES", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
             activebackground='dark blue', activeforeground='white').place(x=100, y=fulheight/2+80, width=fulwidth/2-200, height = 50)

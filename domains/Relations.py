@@ -13,6 +13,12 @@ class Pa_Med:
     def get_MedicineID(self):
         return self.__MedicineID
 
+    def set_PatientID(self, id):
+        self.__PatientID = id
+
+    def set_MedicineID(self, id):
+        self.__MedicineID = id
+
 class Pa_Doc:
     """
     A pair of Patient and Doctor assigned to each other.\n
@@ -27,3 +33,9 @@ class Pa_Doc:
 
     def get_DoctorID(self):
         return self.__DoctorID
+
+    def set_PatientID(self, id):
+        self.__PatientID = id
+
+    def set_DoctorID(self, id):
+        self.__DoctorID = id
