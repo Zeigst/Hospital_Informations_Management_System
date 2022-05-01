@@ -583,16 +583,14 @@ def medicines_asignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_med_list, 
         Label(patma_subwin, text=f"COUNT: {assigned_medicines_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
         Label(patma_subwin, text=f"COUNT: {unassigned_medicines_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
 
-
-
         # Buttons
         assign_medicine_button = Button(patma_subwin, text='ASSIGN MEDICINE', font=("Ariel", 16, 'bold'), fg='white', bg='deep sky blue', relief='ridge',
             activebackground='dark blue', activeforeground='white', command=lambda: assign_medicine(patma_subwin, fulwidth, fulheight, unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id))
-        assign_medicine_button.place(x=fulwidth/4*3-125, y=fulheight-150, width=250, height=50)
+        assign_medicine_button.place(x=fulwidth/2+50, y=fulheight-150, width=250, height=50)
 
         unassign_medicine_button = Button(patma_subwin, text='UNASSIGN MEDICINE', font=("Ariel", 16, 'bold'), fg='deep sky blue', relief='ridge',
             activebackground='dark blue', activeforeground='white', command=lambda: unassign_medicine(patma_subwin, fulwidth, fulheight, unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id))
-        unassign_medicine_button.place(x=fulwidth/4-125, y=fulheight-150, width=250, height=50)
+        unassign_medicine_button.place(x=50, y=fulheight-150, width=250, height=50)
 
 def assign_medicine(patma_subwin, fulwidth, fulheight, unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id):
     if len(unassigned_medicines_tree.selection())>0:
