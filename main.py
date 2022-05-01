@@ -4,6 +4,7 @@ from PIL import ImageTk, Image
 from domains.People import *
 import methods.DoctorMethods as DoctorMethods
 import methods.PatientMethods as PatientMethods
+import methods.MedicineMethods as MedicineMethods
 import database
 
 def on_ready():
@@ -100,8 +101,9 @@ patients_button = Button(window, text="PATIENTS", anchor='center', font=("Ariel"
             activebackground='dark blue', activeforeground='white', command=lambda: PatientMethods.pat_press(window, fulwidth, fulheight, doctors_list, patients_list, medicines_list, pa_doc_list, pa_med_list))
 patients_button.place(x=100, y=fulheight/2+20, width=fulwidth/2-200, height = 50)
 
-Button(window, text="MEDICINES", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
-            activebackground='dark blue', activeforeground='white').place(x=100, y=fulheight/2+80, width=fulwidth/2-200, height = 50)
+medicines_button = Button(window, text="MEDICINES", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
+            activebackground='dark blue', activeforeground='white', command=lambda: MedicineMethods.med_press(window, fulwidth, fulheight, medicines_list, patients_list, pa_med_list))
+medicines_button.place(x=100, y=fulheight/2+80, width=fulwidth/2-200, height = 50)
 
 Button(window, text="EXIT", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
             activebackground='dark blue', activeforeground='white').place(x=100, y=fulheight/2+140, width=fulwidth/2-200, height = 50)

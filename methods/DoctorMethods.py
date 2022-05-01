@@ -267,12 +267,20 @@ def doc_update(doctors_list, pa_doc_list, doc_tree, entry_frame, id_entry, name_
                     doctor.set_dob(dob)
                     if len(phone) > 0:
                         doctor.set_phone(phone)
+                    elif len(phone) == 0:
+                        doctor.set_phone('_')
                     if len(email) > 0:
                         doctor.set_email(email)
+                    elif len(email) == 0:
+                        doctor.set_email('_')
                     if len(dept) > 0:
                         doctor.set_dept(dept)
+                    elif len(dept) == 0:
+                        doctor.set_dept('_')
                     if len(salary) > 0:
                         doctor.set_salary(salary)
+                    elif len(salary) == 0:
+                        doctor.set_salary(0)
                     break
             
             for relation in pa_doc_list:
@@ -389,24 +397,30 @@ def patients_assignment(doc_subwin, doc_tree, fulwidth, fulheight, pa_doc_list, 
         assigned_patients_tree.place(x=50, y=100, height=fulheight-300, width=fulwidth/2-100)
 
         # ===============================================================================
+        # Count
+        Label(docpa_subwin, text=f"COUNT: {assigned_patients_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
+        Label(docpa_subwin, text=f"COUNT: {unassigned_patients_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
 
+        # ===============================================================================
         # Buttons
         assign_patient_button = Button(docpa_subwin, text='ASSIGN PATIENT', font=("Ariel", 16, 'bold'), fg='white', bg='deep sky blue', relief='ridge',
-            activebackground='dark blue', activeforeground='white', command=lambda: assign_patient(unassigned_patients_tree, assigned_patients_tree, unassigned_patients_list, assigned_patients_list, patients_list, doctor_id, pa_doc_list))
-        assign_patient_button.place(x=fulwidth/4*3-125, y=fulheight-150, width=250, height=50)
+            activebackground='dark blue', activeforeground='white', command=lambda: assign_patient(docpa_subwin, fulwidth, fulheight, unassigned_patients_tree, assigned_patients_tree, unassigned_patients_list, assigned_patients_list, patients_list, doctor_id, pa_doc_list))
+        assign_patient_button.place(x=fulwidth/2+50, y=fulheight-150, width=250, height=50)
 
         unassign_patient_button = Button(docpa_subwin, text='UNASSIGN PATIENT', font=("Ariel", 16, 'bold'), fg='deep sky blue', relief='ridge',
-            activebackground='dark blue', activeforeground='white', command=lambda: unassign_patient(assigned_patients_tree, unassigned_patients_tree, assigned_patients_list, unassigned_patients_list, patients_list, doctor_id, pa_doc_list))
-        unassign_patient_button.place(x=fulwidth/4-125, y=fulheight-150, width=250, height=50)
+            activebackground='dark blue', activeforeground='white', command=lambda: unassign_patient(docpa_subwin, fulwidth, fulheight, unassigned_patients_tree, assigned_patients_tree, unassigned_patients_list, assigned_patients_list, patients_list, doctor_id, pa_doc_list))
+        unassign_patient_button.place(x=50, y=fulheight-150, width=250, height=50)
 
-def assign_patient(unassigned_patients_tree, assigned_patients_tree, unassigned_patients_list, assigned_patients_list, patients_list, doctor_id, pa_doc_list):
+def assign_patient(docpa_subwin, fulwidth, fulheight, unassigned_patients_tree, assigned_patients_tree, unassigned_patients_list, assigned_patients_list, patients_list, doctor_id, pa_doc_list):
     if len(unassigned_patients_tree.selection())>0:
         selected_unassigned_patient = unassigned_patients_tree.selection()[0]
         patient_id = unassigned_patients_tree.item(selected_unassigned_patient, 'values')[0]
 
         pa_doc_list.append(Pa_Doc(patient_id, doctor_id))
+
         global unassigned_patients_count
         global assigned_patients_count
+        
         assigned_patients_tree.insert(parent='', index = 'end', iid=assigned_patients_count, text='', values=(unassigned_patients_tree.item(selected_unassigned_patient, 'values')))
         unassigned_patients_tree.delete(selected_unassigned_patient)
         
@@ -419,11 +433,15 @@ def assign_patient(unassigned_patients_tree, assigned_patients_tree, unassigned_
             if patient.get_id()==patient_id:
                 unassigned_patients_list.remove(patient)
                 break
-        
+    
         unassigned_patients_count -= 1
         assigned_patients_count += 1
+        # ===============================================================================
+        # Count
+        Label(docpa_subwin, text=f"COUNT: {assigned_patients_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
+        Label(docpa_subwin, text=f"COUNT: {unassigned_patients_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
 
-def unassign_patient(assigned_patients_tree, unassigned_patients_tree, assigned_patients_list, unassigned_patients_list, patients_list, doctor_id, pa_doc_list):
+def unassign_patient(docpa_subwin, fulwidth, fulheight, unassigned_patients_tree, assigned_patients_tree, unassigned_patients_list, assigned_patients_list, patients_list, doctor_id, pa_doc_list):
     if len(assigned_patients_tree.selection())>0:
         selected_assigned_patient = assigned_patients_tree.selection()[0]
         patient_id = assigned_patients_tree.item(selected_assigned_patient, 'values')[0]
@@ -434,6 +452,7 @@ def unassign_patient(assigned_patients_tree, unassigned_patients_tree, assigned_
     
         global unassigned_patients_count
         global assigned_patients_count
+
         unassigned_patients_tree.insert(parent='', index = 'end', iid=unassigned_patients_count, text='', values=(assigned_patients_tree.item(selected_assigned_patient, 'values')))
         assigned_patients_tree.delete(selected_assigned_patient)
 
@@ -449,6 +468,9 @@ def unassign_patient(assigned_patients_tree, unassigned_patients_tree, assigned_
 
         unassigned_patients_count += 1
         assigned_patients_count -= 1
+        # Count
+        Label(docpa_subwin, text=f"COUNT: {assigned_patients_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
+        Label(docpa_subwin, text=f"COUNT: {unassigned_patients_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
 
 def doc_press(window, fulwidth, fulheight, doctors_list, patients_list, pa_doc_list):
     global selected_doctor

@@ -4,6 +4,7 @@ class Medicine():
         self.__name = name
         self.__price = price
         self.__stock = 0
+        self.__description = '_'
 
     # Get Methods
     def get_id(self):
@@ -18,6 +19,9 @@ class Medicine():
     def get_stock(self):
         return self.__stock
 
+    def get_description(self):
+        return self.__description
+
     # Set Methods:
     def set_id(self, id):
         self.__id = id
@@ -30,3 +34,6 @@ class Medicine():
 
     def set_stock(self, stock):
         self.__stock = stock
+
+    def set_description(self, description):
+        self.__description = description

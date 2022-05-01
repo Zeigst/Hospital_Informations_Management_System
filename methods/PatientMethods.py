@@ -227,11 +227,12 @@ def pat_update(patients_list, pa_doc_list, pa_med_list, pat_tree, entry_frame, i
             Label(entry_frame, bg='deep sky blue', fg='crimson', text='INVALID', font=("Ariel", 14, 'bold')).grid(column=6,row=0,sticky='w')
             valid_check += 1
         else:
-            for patient in patients_list:
-                if patient.get_id() == id:
-                    Label(entry_frame, bg='deep sky blue', fg='crimson', text='ID already exist', font=("Ariel", 14, 'bold')).grid(column=6,row=0,sticky='w')
-                    valid_check += 1
-                    break
+            if id != pat_tree.item(selected_patient, 'values')[0]:
+                for patient in patients_list:
+                    if patient.get_id() == id:
+                        Label(entry_frame, bg='deep sky blue', fg='crimson', text='ID already exist', font=("Ariel", 14, 'bold')).grid(column=6,row=0,sticky='w')
+                        valid_check += 1
+                        break
         
         # Validate Name
         if len(name) == 0:
@@ -276,12 +277,20 @@ def pat_update(patients_list, pa_doc_list, pa_med_list, pat_tree, entry_frame, i
                     patient.set_dob(dob)
                     if len(phone) > 0:
                         patient.set_phone(phone)
+                    elif len(phone) == 0:
+                        patient.set_phone('_')
                     if len(email) > 0:
                         patient.set_email(email)
+                    elif len(email) == 0:
+                        patient.set_email('_')
                     if len(illness) > 0:
                         patient.set_illness(illness)
+                    elif len(illness) == 0:
+                        patient.set_illness('_')
                     if len(debt) > 0:
                         patient.set_debt(debt)
+                    elif len(debt) == 0:
+                        patient.set_debt(0)
                     break
 
             for relation in pa_doc_list:
@@ -404,16 +413,20 @@ def doctors_assignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_doc_list, d
 
         # ===============================================================================
 
+        Label(patda_subwin, text=f"COUNT: {assigned_doctors_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
+        Label(patda_subwin, text=f"COUNT: {unassigned_doctors_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
+
+
         # Buttons
         assign_doctor_button = Button(patda_subwin, text='ASSIGN DOCTOR', font=("Ariel", 16, 'bold'), fg='white', bg='deep sky blue', relief='ridge',
-            activebackground='dark blue', activeforeground='white', command=lambda: assign_doctor(unassigned_doctors_tree, assigned_doctors_tree, unassigned_doctors_list, assigned_doctors_list, doctors_list, pa_doc_list, patient_id))
-        assign_doctor_button.place(x=fulwidth/4*3-125, y=fulheight-150, width=250, height=50)
+            activebackground='dark blue', activeforeground='white', command=lambda: assign_doctor(patda_subwin,fulwidth, fulheight, unassigned_doctors_tree, assigned_doctors_tree, unassigned_doctors_list, assigned_doctors_list, doctors_list, pa_doc_list, patient_id))
+        assign_doctor_button.place(x=fulwidth/2+50, y=fulheight-150, width=250, height=50)
 
         unassign_doctor_button = Button(patda_subwin, text='UNASSIGN DOCTOR', font=("Ariel", 16, 'bold'), fg='deep sky blue', relief='ridge',
-            activebackground='dark blue', activeforeground='white', command=lambda: unassign_doctor(assigned_doctors_tree, unassigned_doctors_tree, assigned_doctors_list, unassigned_doctors_list, doctors_list, patient_id, pa_doc_list))
-        unassign_doctor_button.place(x=fulwidth/4-125, y=fulheight-150, width=250, height=50)
+            activebackground='dark blue', activeforeground='white', command=lambda: unassign_doctor(patda_subwin, fulwidth, fulheight, assigned_doctors_tree, unassigned_doctors_tree, assigned_doctors_list, unassigned_doctors_list, doctors_list, patient_id, pa_doc_list))
+        unassign_doctor_button.place(x=50, y=fulheight-150, width=250, height=50)
 
-def assign_doctor(unassigned_doctors_tree, assigned_doctors_tree, unassigned_doctors_list, assigned_doctors_list, doctors_list, pa_doc_list, patient_id):
+def assign_doctor(patda_subwin, fulwidth, fulheight, unassigned_doctors_tree, assigned_doctors_tree, unassigned_doctors_list, assigned_doctors_list, doctors_list, pa_doc_list, patient_id):
     if len(unassigned_doctors_tree.selection())>0:
         selected_unassigned_doctor = unassigned_doctors_tree.selection()[0]
         doctor_id = unassigned_doctors_tree.item(selected_unassigned_doctor, 'values')[0]
@@ -421,6 +434,7 @@ def assign_doctor(unassigned_doctors_tree, assigned_doctors_tree, unassigned_doc
         pa_doc_list.append(Pa_Doc(patient_id, doctor_id))
         global unassigned_doctors_count
         global assigned_doctors_count
+
         assigned_doctors_tree.insert(parent='', index = 'end', iid=assigned_doctors_count, text='', values=(unassigned_doctors_tree.item(selected_unassigned_doctor, 'values')))
         unassigned_doctors_tree.delete(selected_unassigned_doctor)
 
@@ -433,11 +447,12 @@ def assign_doctor(unassigned_doctors_tree, assigned_doctors_tree, unassigned_doc
             if doctor.get_id()==doctor_id:
                 unassigned_doctors_list.remove(doctor)
                 break
-
         unassigned_doctors_count -= 1
         assigned_doctors_count += 1
+        Label(patda_subwin, text=f"COUNT: {assigned_doctors_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
+        Label(patda_subwin, text=f"COUNT: {unassigned_doctors_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
 
-def unassign_doctor(assigned_doctors_tree, unassigned_doctors_tree, assigned_doctors_list, unassigned_doctors_list, doctors_list, patient_id, pa_doc_list):
+def unassign_doctor(patda_subwin, fulwidth, fulheight, assigned_doctors_tree, unassigned_doctors_tree, assigned_doctors_list, unassigned_doctors_list, doctors_list, patient_id, pa_doc_list):
     if len(assigned_doctors_tree.selection())>0:
         selected_assigned_doctor = assigned_doctors_tree.selection()[0]
         doctor_id = assigned_doctors_tree.item(selected_assigned_doctor, 'values')[0]
@@ -448,6 +463,7 @@ def unassign_doctor(assigned_doctors_tree, unassigned_doctors_tree, assigned_doc
 
         global unassigned_doctors_count
         global assigned_doctors_count
+
         unassigned_doctors_tree.insert(parent='', index = 'end', iid=unassigned_doctors_count, text='', values=(assigned_doctors_tree.item(selected_assigned_doctor, 'values')))
         assigned_doctors_tree.delete(selected_assigned_doctor)
         
@@ -463,6 +479,9 @@ def unassign_doctor(assigned_doctors_tree, unassigned_doctors_tree, assigned_doc
 
         unassigned_doctors_count += 1
         assigned_doctors_count -= 1
+
+        Label(patda_subwin, text=f"COUNT: {assigned_doctors_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
+        Label(patda_subwin, text=f"COUNT: {unassigned_doctors_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
 
 def medicines_asignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_med_list, medicines_list, assigned_medicines_list, unassigned_medicines_list):
     if selected_patient != -1:    
@@ -506,8 +525,8 @@ def medicines_asignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_med_list, 
         unassigned_medicines_tree.column("#0", width=0, stretch=NO)
         unassigned_medicines_tree.column("ID", anchor='center', width=75)
         unassigned_medicines_tree.column("Name",anchor='w', width=150)
-        unassigned_medicines_tree.column("Price",anchor='center', width=100)
-        unassigned_medicines_tree.column("Stock",anchor='center', width=100)
+        unassigned_medicines_tree.column("Price",anchor='e', width=100)
+        unassigned_medicines_tree.column("Stock",anchor='e', width=100)
 
         # Create Headings
         unassigned_medicines_tree.heading("#0", text="")
@@ -539,8 +558,8 @@ def medicines_asignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_med_list, 
         assigned_medicines_tree.column("#0", width=0, stretch=NO)
         assigned_medicines_tree.column("ID", anchor='center', width=75)
         assigned_medicines_tree.column("Name",anchor='w', width=150)
-        assigned_medicines_tree.column("Price",anchor='center', width=100)
-        assigned_medicines_tree.column("Stock",anchor='center', width=100)
+        assigned_medicines_tree.column("Price",anchor='e', width=100)
+        assigned_medicines_tree.column("Stock",anchor='e', width=100)
 
         # Create Headings
         assigned_medicines_tree.heading("#0", text="")
@@ -561,17 +580,21 @@ def medicines_asignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_med_list, 
         assigned_medicines_tree.place(x=50, y=100, height=fulheight-300, width=fulwidth/2-100)
 
         # ===============================================================================
+        Label(patma_subwin, text=f"COUNT: {assigned_medicines_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
+        Label(patma_subwin, text=f"COUNT: {unassigned_medicines_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
+
+
 
         # Buttons
         assign_medicine_button = Button(patma_subwin, text='ASSIGN MEDICINE', font=("Ariel", 16, 'bold'), fg='white', bg='deep sky blue', relief='ridge',
-            activebackground='dark blue', activeforeground='white', command=lambda: assign_medicine(unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id))
+            activebackground='dark blue', activeforeground='white', command=lambda: assign_medicine(patma_subwin, fulwidth, fulheight, unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id))
         assign_medicine_button.place(x=fulwidth/4*3-125, y=fulheight-150, width=250, height=50)
 
         unassign_medicine_button = Button(patma_subwin, text='UNASSIGN MEDICINE', font=("Ariel", 16, 'bold'), fg='deep sky blue', relief='ridge',
-            activebackground='dark blue', activeforeground='white', command=lambda: unassign_medicine(unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id))
+            activebackground='dark blue', activeforeground='white', command=lambda: unassign_medicine(patma_subwin, fulwidth, fulheight, unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id))
         unassign_medicine_button.place(x=fulwidth/4-125, y=fulheight-150, width=250, height=50)
 
-def assign_medicine(unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id):
+def assign_medicine(patma_subwin, fulwidth, fulheight, unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id):
     if len(unassigned_medicines_tree.selection())>0:
         selected_unassigned_medicine = unassigned_medicines_tree.selection()[0]
         medicine_id = unassigned_medicines_tree.item(selected_unassigned_medicine, 'values')[0]
@@ -580,6 +603,7 @@ def assign_medicine(unassigned_medicines_tree, assigned_medicines_tree, unassign
 
         global unassigned_medicines_count
         global assigned_medicines_count
+
         assigned_medicines_tree.insert(parent='', index = 'end', iid=assigned_medicines_count, text='', values=(unassigned_medicines_tree.item(selected_unassigned_medicine, 'values')))
         unassigned_medicines_tree.delete(selected_unassigned_medicine)
 
@@ -596,7 +620,10 @@ def assign_medicine(unassigned_medicines_tree, assigned_medicines_tree, unassign
         unassigned_medicines_count -= 1
         assigned_medicines_count += 1
 
-def unassign_medicine(unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id):
+        Label(patma_subwin, text=f"COUNT: {assigned_medicines_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
+        Label(patma_subwin, text=f"COUNT: {unassigned_medicines_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
+
+def unassign_medicine(patma_subwin, fulwidth, fulheight, unassigned_medicines_tree, assigned_medicines_tree, unassigned_medicines_list, assigned_medicines_list, medicines_list, pa_med_list, patient_id):
     if len(assigned_medicines_tree.selection())>0:
         selected_assigned_medicine = assigned_medicines_tree.selection()[0]
         medicine_id = assigned_medicines_tree.item(selected_assigned_medicine, 'values')[0]
@@ -607,6 +634,7 @@ def unassign_medicine(unassigned_medicines_tree, assigned_medicines_tree, unassi
 
         global unassigned_medicines_count
         global assigned_medicines_count
+
         unassigned_medicines_tree.insert(parent='', index = 'end', iid=unassigned_medicines_count, text='', values=(assigned_medicines_tree.item(selected_assigned_medicine, 'values')))
         assigned_medicines_tree.delete(selected_assigned_medicine)
 
@@ -619,9 +647,12 @@ def unassign_medicine(unassigned_medicines_tree, assigned_medicines_tree, unassi
             if medicine.get_id()==medicine_id:
                 assigned_medicines_list.remove(medicine)
                 break
-
+        
         unassigned_medicines_count += 1
         assigned_medicines_count -= 1
+
+        Label(patma_subwin, text=f"COUNT: {assigned_medicines_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
+        Label(patma_subwin, text=f"COUNT: {unassigned_medicines_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
 
 def pat_press(window, fulwidth, fulheight, doctors_list, patients_list, medicines_list, pa_doc_list, pa_med_list):
     global selected_patient
