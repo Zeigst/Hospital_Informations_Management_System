@@ -113,9 +113,7 @@ def doc_add(doctors_list, doc_tree, entry_frame, id_entry, name_entry, gend_entr
         doctors_list.append(new_doc)
 
         # Display on Treeview
-        global doc_count
-        doc_tree.insert(parent='', index = 'end', iid=doc_count, text='', values=(id, name, gend, dob))
-        doc_count += 1
+        doc_tree.insert(parent='', index = 'end', iid=id, text='', values=(id, name, gend, dob))
 
         # Empty Entry boxes
         id_entry.delete(0, END)
@@ -359,7 +357,7 @@ def patients_assignment(doc_subwin, doc_tree, fulwidth, fulheight, pa_doc_list, 
         global unassigned_patients_count
         unassigned_patients_count = 0
         for patient in unassigned_patients_list:
-            unassigned_patients_tree.insert(parent='', index = 'end', iid=unassigned_patients_count, text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
+            unassigned_patients_tree.insert(parent='', index = 'end', iid=patient.get_id(), text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
             unassigned_patients_count += 1
 
         unassigned_patients_tree.place(x=fulwidth/2+50, y=100, height=fulheight-300, width=fulwidth/2-100)
@@ -391,7 +389,7 @@ def patients_assignment(doc_subwin, doc_tree, fulwidth, fulheight, pa_doc_list, 
         global assigned_patients_count
         assigned_patients_count = 0
         for patient in assigned_patients_list:
-            assigned_patients_tree.insert(parent='', index = 'end', iid=assigned_patients_count, text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
+            assigned_patients_tree.insert(parent='', index = 'end', iid=patient.get_id(), text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
             assigned_patients_count += 1
 
         assigned_patients_tree.place(x=50, y=100, height=fulheight-300, width=fulwidth/2-100)
@@ -421,7 +419,7 @@ def assign_patient(docpa_subwin, fulwidth, fulheight, unassigned_patients_tree, 
         global unassigned_patients_count
         global assigned_patients_count
         
-        assigned_patients_tree.insert(parent='', index = 'end', iid=assigned_patients_count, text='', values=(unassigned_patients_tree.item(selected_unassigned_patient, 'values')))
+        assigned_patients_tree.insert(parent='', index = 'end', iid=patient_id, text='', values=(unassigned_patients_tree.item(selected_unassigned_patient, 'values')))
         unassigned_patients_tree.delete(selected_unassigned_patient)
         
         for patient in patients_list:
@@ -453,7 +451,7 @@ def unassign_patient(docpa_subwin, fulwidth, fulheight, unassigned_patients_tree
         global unassigned_patients_count
         global assigned_patients_count
 
-        unassigned_patients_tree.insert(parent='', index = 'end', iid=unassigned_patients_count, text='', values=(assigned_patients_tree.item(selected_assigned_patient, 'values')))
+        unassigned_patients_tree.insert(parent='', index = 'end', iid=patient_id, text='', values=(assigned_patients_tree.item(selected_assigned_patient, 'values')))
         assigned_patients_tree.delete(selected_assigned_patient)
 
         for patient in patients_list:
@@ -523,11 +521,8 @@ def doc_press(window, fulwidth, fulheight, doctors_list, patients_list, pa_doc_l
     doc_tree.bind('<Motion>', 'break')
     
     # Insert Data
-    global doc_count
-    doc_count = 0
     for doctor in doctors_list:
-        doc_tree.insert(parent='', index = 'end', iid=doc_count, text='', values=(doctor.get_id(), doctor.get_name(), doctor.get_gend(), doctor.get_dob()))
-        doc_count += 1
+        doc_tree.insert(parent='', index = 'end', iid=doctor.get_id(), text='', values=(doctor.get_id(), doctor.get_name(), doctor.get_gend(), doctor.get_dob()))
         
     doc_tree.place(x=fulwidth/2+50, y=50, height=fulheight-250, width=fulwidth/2-100)
 

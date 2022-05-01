@@ -115,9 +115,7 @@ def pat_add(patients_list, pat_tree, entry_frame, id_entry, name_entry, gend_ent
         patients_list.append(new_pat)
 
         # Display on Treeview
-        global pat_count
-        pat_tree.insert(parent='', index = 'end', iid=pat_count, text='', values=(id, name, gend, dob))
-        pat_count += 1
+        pat_tree.insert(parent='', index = 'end', iid=id, text='', values=(id, name, gend, dob))
 
         # Empty Entry boxes
         id_entry.delete(0, END)
@@ -374,7 +372,7 @@ def doctors_assignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_doc_list, d
         global unassigned_doctors_count
         unassigned_doctors_count = 0
         for doctor in unassigned_doctors_list:
-            unassigned_doctors_tree.insert(parent='', index = 'end', iid=unassigned_doctors_count, text='', values=(doctor.get_id(), doctor.get_name(), doctor.get_gend(), doctor.get_dob()))
+            unassigned_doctors_tree.insert(parent='', index = 'end', iid=doctor.get_id(), text='', values=(doctor.get_id(), doctor.get_name(), doctor.get_gend(), doctor.get_dob()))
             unassigned_doctors_count += 1
 
         unassigned_doctors_tree.place(x=fulwidth/2+50, y=100, height=fulheight-300, width=fulwidth/2-100)
@@ -406,7 +404,7 @@ def doctors_assignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_doc_list, d
         global assigned_doctors_count
         assigned_doctors_count = 0
         for doctor in assigned_doctors_list:
-            assigned_doctors_tree.insert(parent='', index = 'end', iid=assigned_doctors_count, text='', values=(doctor.get_id(), doctor.get_name(), doctor.get_gend(), doctor.get_dob()))
+            assigned_doctors_tree.insert(parent='', index = 'end', iid=doctor.get_id(), text='', values=(doctor.get_id(), doctor.get_name(), doctor.get_gend(), doctor.get_dob()))
             assigned_doctors_count += 1
 
         assigned_doctors_tree.place(x=50, y=100, height=fulheight-300, width=fulwidth/2-100)
@@ -435,7 +433,7 @@ def assign_doctor(patda_subwin, fulwidth, fulheight, unassigned_doctors_tree, as
         global unassigned_doctors_count
         global assigned_doctors_count
 
-        assigned_doctors_tree.insert(parent='', index = 'end', iid=assigned_doctors_count, text='', values=(unassigned_doctors_tree.item(selected_unassigned_doctor, 'values')))
+        assigned_doctors_tree.insert(parent='', index = 'end', iid=doctor_id, text='', values=(unassigned_doctors_tree.item(selected_unassigned_doctor, 'values')))
         unassigned_doctors_tree.delete(selected_unassigned_doctor)
 
         for doctor in doctors_list:
@@ -464,7 +462,7 @@ def unassign_doctor(patda_subwin, fulwidth, fulheight, assigned_doctors_tree, un
         global unassigned_doctors_count
         global assigned_doctors_count
 
-        unassigned_doctors_tree.insert(parent='', index = 'end', iid=unassigned_doctors_count, text='', values=(assigned_doctors_tree.item(selected_assigned_doctor, 'values')))
+        unassigned_doctors_tree.insert(parent='', index = 'end', iid=doctor_id, text='', values=(assigned_doctors_tree.item(selected_assigned_doctor, 'values')))
         assigned_doctors_tree.delete(selected_assigned_doctor)
         
         for doctor in doctors_list:
@@ -541,7 +539,7 @@ def medicines_asignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_med_list, 
         global unassigned_medicines_count
         unassigned_medicines_count = 0
         for medicine in unassigned_medicines_list:
-            unassigned_medicines_tree.insert(parent='', index = 'end', iid=unassigned_medicines_count, text='', values=(medicine.get_id(), medicine.get_name(), medicine.get_price(), medicine.get_stock()))
+            unassigned_medicines_tree.insert(parent='', index = 'end', iid=medicine.get_id(), text='', values=(medicine.get_id(), medicine.get_name(), medicine.get_price(), medicine.get_stock()))
             unassigned_medicines_count += 1
 
         unassigned_medicines_tree.place(x=fulwidth/2+50, y=100, height=fulheight-300, width=fulwidth/2-100)
@@ -574,7 +572,7 @@ def medicines_asignment(pat_subwin, pat_tree, fulwidth, fulheight, pa_med_list, 
         global assigned_medicines_count
         assigned_medicines_count = 0
         for medicine in assigned_medicines_list:
-            assigned_medicines_tree.insert(parent='', index = 'end', iid=assigned_medicines_count, text='', values=(medicine.get_id(), medicine.get_name(), medicine.get_price(), medicine.get_stock()))
+            assigned_medicines_tree.insert(parent='', index = 'end', iid=medicine.get_id(), text='', values=(medicine.get_id(), medicine.get_name(), medicine.get_price(), medicine.get_stock()))
             assigned_medicines_count += 1
 
         assigned_medicines_tree.place(x=50, y=100, height=fulheight-300, width=fulwidth/2-100)
@@ -602,7 +600,7 @@ def assign_medicine(patma_subwin, fulwidth, fulheight, unassigned_medicines_tree
         global unassigned_medicines_count
         global assigned_medicines_count
 
-        assigned_medicines_tree.insert(parent='', index = 'end', iid=assigned_medicines_count, text='', values=(unassigned_medicines_tree.item(selected_unassigned_medicine, 'values')))
+        assigned_medicines_tree.insert(parent='', index = 'end', iid=medicine_id, text='', values=(unassigned_medicines_tree.item(selected_unassigned_medicine, 'values')))
         unassigned_medicines_tree.delete(selected_unassigned_medicine)
 
         for medicine in medicines_list:
@@ -633,7 +631,7 @@ def unassign_medicine(patma_subwin, fulwidth, fulheight, unassigned_medicines_tr
         global unassigned_medicines_count
         global assigned_medicines_count
 
-        unassigned_medicines_tree.insert(parent='', index = 'end', iid=unassigned_medicines_count, text='', values=(assigned_medicines_tree.item(selected_assigned_medicine, 'values')))
+        unassigned_medicines_tree.insert(parent='', index = 'end', iid=medicine_id, text='', values=(assigned_medicines_tree.item(selected_assigned_medicine, 'values')))
         assigned_medicines_tree.delete(selected_assigned_medicine)
 
         for medicine in medicines_list:
@@ -704,11 +702,8 @@ def pat_press(window, fulwidth, fulheight, doctors_list, patients_list, medicine
     pat_tree.bind('<Motion>', 'break')
 
     # Insert Data
-    global pat_count
-    pat_count = 0
     for patient in patients_list:
-        pat_tree.insert(parent='', index = 'end', iid=pat_count, text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
-        pat_count += 1
+        pat_tree.insert(parent='', index = 'end', iid=patient.get_id(), text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
         
     pat_tree.place(x=fulwidth/2+50, y=50, height=fulheight-250, width=fulwidth/2-100)
 

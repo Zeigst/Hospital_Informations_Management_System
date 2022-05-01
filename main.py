@@ -1,10 +1,11 @@
 from tkinter import *
-from tkinter import ttk
 from PIL import ImageTk, Image
 from domains.People import *
 import methods.DoctorMethods as DoctorMethods
 import methods.PatientMethods as PatientMethods
 import methods.MedicineMethods as MedicineMethods
+import methods.WorkerMethods as WorkerMethods
+import credits
 import database
 
 def on_ready():
@@ -51,8 +52,6 @@ pa_doc_list = []
 global pa_med_list
 pa_med_list = []
 
-
-
 #Create main window
 window = Tk()
 
@@ -94,8 +93,9 @@ doctors_button = Button(window, text="DOCTORS", anchor='center', font=("Ariel", 
             activebackground='dark blue', activeforeground='white', command=lambda: DoctorMethods.doc_press(window, fulwidth, fulheight, doctors_list, patients_list, pa_doc_list))
 doctors_button.place(x=100, y=fulheight/2-100, width=fulwidth/2-200, height = 50)
 
-Button(window, text="WORKERS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
-            activebackground='dark blue', activeforeground='white').place(x=100, y=fulheight/2-40, width=fulwidth/2-200, height = 50)
+workers_button = Button(window, text="WORKERS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
+            activebackground='dark blue', activeforeground='white', command=lambda: WorkerMethods.wor_press(window, fulwidth, fulheight, workers_list))
+workers_button.place(x=100, y=fulheight/2-40, width=fulwidth/2-200, height = 50)
 
 patients_button = Button(window, text="PATIENTS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
             activebackground='dark blue', activeforeground='white', command=lambda: PatientMethods.pat_press(window, fulwidth, fulheight, doctors_list, patients_list, medicines_list, pa_doc_list, pa_med_list))
@@ -105,8 +105,9 @@ medicines_button = Button(window, text="MEDICINES", anchor='center', font=("Arie
             activebackground='dark blue', activeforeground='white', command=lambda: MedicineMethods.med_press(window, fulwidth, fulheight, medicines_list, patients_list, pa_med_list))
 medicines_button.place(x=100, y=fulheight/2+80, width=fulwidth/2-200, height = 50)
 
-Button(window, text="EXIT", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
-            activebackground='dark blue', activeforeground='white').place(x=100, y=fulheight/2+140, width=fulwidth/2-200, height = 50)
+credit_button = Button(window, text="CREDITS", anchor='center', font=("Ariel", 20,'bold'), bg="deep sky blue", fg="white", relief='ridge', 
+            activebackground='dark blue', activeforeground='white', command=lambda: credits.credits_press(window, fulwidth, fulheight))
+credit_button.place(x=100, y=fulheight/2+140, width=fulwidth/2-200, height = 50)
 
 
 def main():

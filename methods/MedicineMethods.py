@@ -85,9 +85,8 @@ def med_add(medicines_list, med_tree, entry_frame, id_entry, name_entry, price_e
         medicines_list.append(new_med)
 
         # Display on Treeview
-        global med_count
-        med_tree.insert(parent='', index = 'end', iid=med_count, text='', values=(id, name, price, stock))
-        med_count += 1
+        med_tree.insert(parent='', index = 'end', iid=id, text='', values=(id, name, price, stock))
+
 
         # Empty Entry boxes
         id_entry.delete(0, END)
@@ -285,7 +284,7 @@ def patients_assignment(med_subwin, med_tree, fulwidth, fulheight, pa_med_list, 
         global unassigned_patients_count
         unassigned_patients_count = 0
         for patient in unassigned_patients_list:
-            unassigned_patients_tree.insert(parent='', index = 'end', iid=unassigned_patients_count, text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
+            unassigned_patients_tree.insert(parent='', index = 'end', iid=patient.get_id(), text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
             unassigned_patients_count += 1
 
         unassigned_patients_tree.place(x=fulwidth/2+50, y=100, height=fulheight-300, width=fulwidth/2-100)
@@ -317,7 +316,7 @@ def patients_assignment(med_subwin, med_tree, fulwidth, fulheight, pa_med_list, 
         global assigned_patients_count
         assigned_patients_count = 0
         for patient in assigned_patients_list:
-            assigned_patients_tree.insert(parent='', index = 'end', iid=assigned_patients_count, text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
+            assigned_patients_tree.insert(parent='', index = 'end', iid=patient.get_id(), text='', values=(patient.get_id(), patient.get_name(), patient.get_gend(), patient.get_dob()))
             assigned_patients_count += 1
 
         assigned_patients_tree.place(x=50, y=100, height=fulheight-300, width=fulwidth/2-100)
@@ -345,7 +344,7 @@ def assign_patient(medpa_subwin, fulwidth, fulheight, assigned_patients_tree, un
         global unassigned_patients_count
         global assigned_patients_count
 
-        assigned_patients_tree.insert(parent='', index = 'end', iid=assigned_patients_count, text='', values=(unassigned_patients_tree.item(selected_unassigned_patient, 'values')))
+        assigned_patients_tree.insert(parent='', index = 'end', iid=patient_id, text='', values=(unassigned_patients_tree.item(selected_unassigned_patient, 'values')))
         unassigned_patients_tree.delete(selected_unassigned_patient)
         
         for patient in patients_list:
@@ -374,7 +373,7 @@ def unassign_patient(medpa_subwin, fulwidth, fulheight, assigned_patients_tree, 
         global unassigned_patients_count
         global assigned_patients_count
 
-        unassigned_patients_tree.insert(parent='', index = 'end', iid=unassigned_patients_count, text='', values=(assigned_patients_tree.item(selected_assigned_patient, 'values')))
+        unassigned_patients_tree.insert(parent='', index = 'end', iid=patient_id, text='', values=(assigned_patients_tree.item(selected_assigned_patient, 'values')))
         assigned_patients_tree.delete(selected_assigned_patient)
 
         for patient in patients_list:
@@ -388,6 +387,7 @@ def unassign_patient(medpa_subwin, fulwidth, fulheight, assigned_patients_tree, 
                 break
         unassigned_patients_count += 1
         assigned_patients_count -= 1
+            
         Label(medpa_subwin, text=f"COUNT: {assigned_patients_count}", anchor='e', bg='deep sky blue', fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4+50,y=fulheight-150,width=200,height=50)
         Label(medpa_subwin, text=f"COUNT: {unassigned_patients_count}", anchor='e',fg='black', font=("Ariel", 16, 'bold')).place(x=fulwidth/4*3+50,y=fulheight-150,width=200,height=50)
 
@@ -441,11 +441,8 @@ def med_press(window, fulwidth, fulheight, medicines_list, patients_list, pa_med
     med_tree.bind('<Motion>', 'break')
 
     # Insert Data
-    global med_count
-    med_count = 0
     for medicine in medicines_list:
-        med_tree.insert(parent='', index = 'end', iid=med_count, text='', values=(medicine.get_id(), medicine.get_name(), medicine.get_price(), medicine.get_stock()))
-        med_count += 1
+        med_tree.insert(parent='', index = 'end', iid=medicine.get_id(), text='', values=(medicine.get_id(), medicine.get_name(), medicine.get_price(), medicine.get_stock()))
         
     med_tree.place(x=fulwidth/2+50, y=50, height=fulheight-250, width=fulwidth/2-100)
 
